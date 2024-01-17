@@ -1,4 +1,5 @@
 from collections import UserDict
+import math
 
 DEFAULT_PAGE_SIZE = 10
 
@@ -14,8 +15,19 @@ class AddressBook(UserDict):
                 return record
         return None
 
+    def page_count(self):
+        return math.ceil(len(self.data) / DEFAULT_PAGE_SIZE)
+
     def iterator(self, page):
-        pass
+        start_offset = page * DEFAULT_PAGE_SIZE
+        if start_offset < 0 or start_offset > len(self.data):
+            offset = 0
+        values = list(self.data.values())
+        finish_offset = start_offset+DEFAULT_PAGE_SIZE
+        if finish_offset>len(values):
+            finish_offset=len(values)
+        for i in range(start_offset, finish_offset):
+            yield values[i]
 
 
 if __name__ == "__main__":
