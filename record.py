@@ -1,13 +1,18 @@
 from name import Name
 from phone import Phone
+from birthday import Birthday
 
 
 class Record:
-    def __init__(self, name):
+    def __init__(self, name, birthday=None):
         if not name:
             raise ValueError(f"'name' is empty or none")
         self.name = Name(name)
         self.phones = []
+        if birthday:
+            self.birthday = Birthday(birthday)
+        else:
+            self.birthday = None
 
     def add_phone(self, phone):
         self.phones.append(phone)

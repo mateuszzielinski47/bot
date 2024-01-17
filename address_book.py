@@ -1,5 +1,7 @@
 from collections import UserDict
 
+DEFAULT_PAGE_SIZE = 10
+
 
 class AddressBook(UserDict):
 
@@ -11,3 +13,11 @@ class AddressBook(UserDict):
             if name == value:
                 return record
         return None
+
+    def iterator(self, page):
+        pass
+
+
+if __name__ == "__main__":
+    for number in AddressBook().iterator(1, 10):
+        print(number)
