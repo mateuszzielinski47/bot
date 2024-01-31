@@ -1,9 +1,17 @@
 from datetime import datetime
+from field import Field
+import re
 
 
-class Birthday:
+class Birthday(Field):
     def __init__(self, value):
-        self.value = datetime.strptime(value, "%Y-%m-%d")
+        Field.__init__(self, value)
+
+    @Field.value.setter
+    def value(self, value):
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+            raise ValueError("Birthday has invalid format!")
+        self._value = datetime.strptime(value, "%Y-%m-%d")
 
     def days_to_birthday(self):
         today = datetime.now()
@@ -14,6 +22,6 @@ class Birthday:
         days_to_birthday = birthday - today
         return days_to_birthday
 
-if __name__=='__main__':
-    b= Birthday("2000-01-01")
-
+if __name__=="__main__":
+    b = Birthday("2000-01-aa")
+    print(b.value)

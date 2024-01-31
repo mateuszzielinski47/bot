@@ -1,12 +1,22 @@
+import random
+
 from address_book import AddressBook
+from birthday import Birthday
 from phone import Phone
 from record import Record
 
+
 def add_contact(name, *phones):
-    r=Record(name)
+    r = Record(name)
     for phone in phones:
-        r.add_phone(phone)
+        r.add_phone(Phone(phone))
+    if random.randint(1, 10) == 10:
+        year = random.randint(1970, 2024)
+        month = random.randint(1, 12)
+        day = random.randint(1, 28)
+        r.birthday = f'{year}-{month:0>2}-{day:0>2}'
     contacts.add_record(r)
+
 
 contacts = AddressBook()
 
@@ -72,7 +82,7 @@ add_contact("Cezary Szymański", "777-888-999", "123 456 789")
 add_contact("Dorota Jastrzębska", "222-333-444")
 add_contact("Ewa Stępień", "555-666-777", "987 654 321")
 add_contact("Filip Lisowski", "111-333-555")
-add_contact("Grażyna Piotrowska", "999-888-777", "333 222 111")
+add_contact("Grażyna Piotrowska", "999 888 777", "333 222 111")
 add_contact("Henryk Słowikowski", "444-555-666")
 
 
@@ -91,7 +101,6 @@ def add(*args):
     return "[OK]!"
 
 
-# Janko Walski 123456789 111111111
 def change(*args):
     tested_name = " ".join(args[0:-2]).lower()
     old_number = Phone(args[-2])
@@ -114,6 +123,16 @@ def phone(*args):
     return f"Name not found for '{tested_name}'"
 
 
+def birthday(*args):
+    tested_name = " ".join(args[0:-1]).lower()
+    date = args[-1]
+    for name, record in contacts.items():
+        if name.lower() == tested_name:
+            record.birthday = date
+            return ("[OK]")
+    return f"Name not found '{tested_name}'"
+
+
 def find(*args):
     result = []
     tested_value = " ".join(args).lower()
@@ -126,9 +145,13 @@ def find(*args):
 def show_all(*args):
     result = []
     for page in range(contacts.page_count()):
-        result.append((f"{'-'*40} PAGE {page+1} {'-'*40}"))
+        result.append((f"{'-' * 40} PAGE {page + 1} {'-' * 40}"))
         for record in contacts.iterator(page):
-            result.append(f"{record.name} -> {record.phones}")
+            result.append(f"→ {record.name.value: <35}    {record.phones[0]}")
+            for phone in record.phones[1:]:
+                result.append(f"  {'':<35}    {phone}")
+            if record.birthday:
+                result.append(f"  {'':^35}    📅{record.birthday}")
     return result
 
 
