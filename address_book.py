@@ -31,7 +31,6 @@ class AddressBook(UserDict):
         for i in range(start_offset, finish_offset):
             yield values[i]
 
-    # TODO:tworzenie pliku tekstowego w określonej ścieżce
     def serialize(self, path):
         with open(path, 'w') as file:
             json_data = jsonpickle.encode(self.data, indent=4)
