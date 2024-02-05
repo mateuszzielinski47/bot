@@ -3,6 +3,6 @@ def input_error(function):
         while True:
             try:
                 return function(*args, **kwargs)
-            except (KeyError, ValueError, IndexError) as e:
+            except (KeyError, ValueError, IndexError, TypeError) as e:
                 print(e)
     return inner

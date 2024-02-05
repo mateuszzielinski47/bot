@@ -1,5 +1,7 @@
+import sys
 from collections import UserDict
 import math
+import jsonpickle
 
 DEFAULT_PAGE_SIZE = 10
 
@@ -23,13 +25,19 @@ class AddressBook(UserDict):
         if start_offset < 0 or start_offset > len(self.data):
             offset = 0
         values = list(self.data.values())
-        finish_offset = start_offset+DEFAULT_PAGE_SIZE
-        if finish_offset>len(values):
-            finish_offset=len(values)
+        finish_offset = start_offset + DEFAULT_PAGE_SIZE
+        if finish_offset > len(values):
+            finish_offset = len(values)
         for i in range(start_offset, finish_offset):
             yield values[i]
 
+    # TODO:tworzenie pliku tekstowego w określonej ścieżce
+    def serialize(self, path):
+        with open(path, 'w') as file:
+            json_data = jsonpickle.encode(self.data, indent=4)
+            file.write(json_data)
 
-if __name__ == "__main__":
-    for number in AddressBook().iterator(1, 10):
-        print(number)
+    def deserialize(self, path):
+        with open(path, 'r') as file:
+            json_data = file.read()
+            self.data = jsonpickle.decode(json_data)
